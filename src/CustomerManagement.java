@@ -1,3 +1,4 @@
+import javax.swing.*;
 import java.io.File;
 import java.time.LocalDate;
 import java.util.*;
@@ -20,7 +21,7 @@ public class CustomerManagement {
         List<String> customerDataList = new ArrayList<>();
 
         try {
-            Scanner scanner = new Scanner(new File(customerPath));
+            Scanner scanner = new Scanner(new File(customerPath)); //vad gör detta?
 
             while (scanner.hasNextLine()){
                 customerDataList.add(scanner.nextLine());
@@ -42,7 +43,27 @@ public class CustomerManagement {
         for (int i = 0; i < customerData.size(); i++) {
             if (customerData.get(i).contains(",")) {
                 customer = new Customer();
-                customer.setIdNumber(customerData.get(i).substring(0, 10)); //kanske ändra "9" till mindre hårdkodad lösning.   ;
+                customer.setIdNumber(customerData.get(i).substring(0, customerData.get(i).indexOf(",")));
+                customer.setName(customerData.get(i).substring(customerData.get(i).indexOf(",")+2));
+            }
+            else {
+                customer.setJoinDate(customerData.get(i)); //kanske ändra "9" till mindre hårdkodad lösning.   ;
+                customerList.add(customer);
+            }
+        }
+        return customerList;
+    }
+
+    /*
+
+    public List<Customer> createCustomerList(List<String> customerData) {
+        List<Customer> customerList = new ArrayList<>();
+        Customer customer = new Customer();
+
+        for (int i = 0; i < customerData.size(); i++) {
+            if (customerData.get(i).contains(",")) {
+                customer = new Customer();
+                customer.setIdNumber(customerData.get(i).substring(0, 10)); //kanske ändra "10" till mindre hårdkodad lösning.   ;
                 customer.setName(customerData.get(i).substring(12)); //kanske ändra "13" till mindre hårdkodad lösning.   ;
             }
             else {
@@ -54,10 +75,13 @@ public class CustomerManagement {
     }
 
 
+    */
+
+
     public static Boolean test = false;
     private Scanner scanner;
 
-    public String readInputData (String promt, String optionalTestParameter) {
+    public String readInputData (String optionalTestParameter) {
         if (test) {
             scanner = new Scanner(optionalTestParameter);
         }
@@ -67,33 +91,29 @@ public class CustomerManagement {
 
         while (true) {
             try {
-                System.out.println(promt);
-                return scanner.nextLine();
-            } catch (InputMismatchException e) {
-                // TODO: 2020-10-10  tweeka. ta bort?
-                System.out.println("Du skrev något annat än siffror. Försök igen.");
-                scanner.next();
+                System.out.println("Vad heter personen eller vad är hens personnummer (10 siffror)");
+                String indata = scanner.nextLine();
+                //String indata = JOptionPane.showInputDialog("Vad heter personen eller vad är hens personnummer (10 siffror)");
+                //if (indata == null)
+                //    System.exit(0);
+                while (indata.isEmpty()) {
+                    //indata = JOptionPane.showInputDialog("Du skrev inget. Försök igen.");
+                    System.out.println("Du skrev inget. Försök igen!");
+                    indata = scanner.nextLine();
+                }
+                return indata;
             }
-            catch (NoSuchElementException e) {
-                System.out.println("Indata saknas!");
-                scanner.next();
-            }
+
             catch (Exception e) {
-                System.out.println("Något gick fel. Försök igen.");
-                scanner.next();
+                //return JOptionPane.showInputDialog("Ett fel har uppstått. Försök igen.");
+                //JOptionPane.showMessageDialog(null, "Ett fel har uppstått. Starta om programmet."); //obs, justera.
+                System.out.println("Ett fel har uppstått.");
                 e.getStackTrace();
+                System.exit(0);
+                //scanner.nextLine();
             }
         }
     }
-
-
-    public String communication(){
-        String input = readInputData("Skriv namn eller personnummer!", null);
-        return input;
-
-    }
-
-
 
     //nu ta input och söka in kundregistret.
     public String customerOrNotOrHasBeen(List<Customer> customerList, String s) {
@@ -123,9 +143,11 @@ public class CustomerManagement {
     public void mainProgram(){
         List<String> customerDataArray = createDataArray(customerPath);
         List<Customer> customerList = createCustomerList(customerDataArray);
-        String input = communication();
+       // String input = communication();
+        String input = readInputData(null);
         String customerOrNotOrHasBeen = customerOrNotOrHasBeen(customerList, input);
         System.out.println(customerOrNotOrHasBeen);
+
     }
 
 

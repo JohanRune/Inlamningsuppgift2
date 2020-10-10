@@ -57,7 +57,7 @@ CustomerManagement cm = new CustomerManagement();
     public final void readInputDataTest(){
         cm.test=true;
         String ok = "23";
-        assertTrue(cm.readInputData("Hej", ok).equals("23"));
+        assertTrue(cm.readInputData(ok).equals("23"));
     }
 
 
