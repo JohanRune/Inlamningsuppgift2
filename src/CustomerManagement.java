@@ -1,8 +1,8 @@
 import java.io.File;
 import java.time.LocalDate;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Scanner;
+import java.util.*;
+import java.time.temporal.ChronoUnit;
+
 
 /**
  * Created by Johan Rune
@@ -54,10 +54,80 @@ public class CustomerManagement {
     }
 
 
+    public static Boolean test = false;
+    private Scanner scanner;
+
+    public String readInputData (String promt, String optionalTestParameter) {
+        if (test) {
+            scanner = new Scanner(optionalTestParameter);
+        }
+        else{
+            scanner = new Scanner(System.in);
+        }
+
+        while (true) {
+            try {
+                System.out.println(promt);
+                return scanner.nextLine();
+            } catch (InputMismatchException e) {
+                // TODO: 2020-10-10  tweeka. ta bort?
+                System.out.println("Du skrev något annat än siffror. Försök igen.");
+                scanner.next();
+            }
+            catch (NoSuchElementException e) {
+                System.out.println("Indata saknas!");
+                scanner.next();
+            }
+            catch (Exception e) {
+                System.out.println("Något gick fel. Försök igen.");
+                scanner.next();
+                e.getStackTrace();
+            }
+        }
+    }
+
+
+    public String communication(){
+        String input = readInputData("Skriv namn eller personnummer!", null);
+        return input;
+
+    }
+
+
+
+    //nu ta input och söka in kundregistret.
+    public String customerOrNotOrHasBeen(List<Customer> customerList, String s) {
+
+        for (Customer c : customerList) {
+            if (c.getName().equals(s) || c.getIdNumber().equals(s))
+                return presentOrExCustomer(c.getJoinDate());
+
+        }
+        return "Personen har aldrig varit kund";
+    }
+
+
+    public String presentOrExCustomer(String date) {
+
+        LocalDate firstDate = LocalDate.parse(date);
+        LocalDate dateToday = LocalDate.now();
+
+        if (ChronoUnit.DAYS.between(firstDate, dateToday) <= 365)
+            return "Personen är kund nu";
+        else
+            return "Personen har varit kund förut men är inte kund nu";
+    }
+
+
+
     public void mainProgram(){
         List<String> customerDataArray = createDataArray(customerPath);
-        createCustomerList(customerDataArray);
+        List<Customer> customerList = createCustomerList(customerDataArray);
+        String input = communication();
+        String customerOrNotOrHasBeen = customerOrNotOrHasBeen(customerList, input);
+        System.out.println(customerOrNotOrHasBeen);
     }
+
 
 }
 
