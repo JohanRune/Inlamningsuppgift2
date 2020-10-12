@@ -1,5 +1,5 @@
 import javax.swing.*;
-import java.io.File;
+import java.io.*;
 import java.time.LocalDate;
 import java.util.*;
 import java.time.temporal.ChronoUnit;
@@ -117,11 +117,14 @@ public class CustomerManagement {
 
     //nu ta input och söka in kundregistret.
     public String customerOrNotOrHasBeen(List<Customer> customerList, String s) {
-
+        String s2;
         for (Customer c : customerList) {
-            if (c.getName().equals(s) || c.getIdNumber().equals(s))
-                return presentOrExCustomer(c.getJoinDate());
-
+            if (c.getName().equals(s) || c.getIdNumber().equals(s)) {
+                s2 = presentOrExCustomer(c.getJoinDate());
+                if (s2.equals("Personen är kund nu"))
+                    writeToFile(c);
+                return s2;
+            }
         }
         return "Personen har aldrig varit kund";
     }
@@ -137,6 +140,48 @@ public class CustomerManagement {
         else
             return "Personen har varit kund förut men är inte kund nu";
     }
+
+
+
+
+
+
+
+
+
+
+    public void writeToFile(Customer customer){
+
+            try (PrintWriter w = new PrintWriter(new FileWriter("TallPeopleInformation.txt", true));) {
+
+                for (int i = 0; i < customerList.size(); i++) {
+                    if (customerList.get(i).getLängd() > 199) {
+                        w.println(customerList.get(i).getNamn());
+                        w.println(customerList.get(i).getLängd());
+                    }
+                }
+            }
+            catch (FileNotFoundException e) {
+                System.out.println("Filen kunde inte hittas.");
+                e.printStackTrace();
+                System.exit(0);
+            }
+            catch (IOException e) {
+                System.out.println("Det gick inte att skriva till fil.");
+                e.printStackTrace();
+                System.exit(0);
+            }
+            catch (Exception e) {
+                System.out.println("Något gick fel.");
+                e.printStackTrace();
+                System.exit(0);
+            }
+
+        }
+
+
+
+
 
 
 
