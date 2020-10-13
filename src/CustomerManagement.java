@@ -1,5 +1,8 @@
 import javax.swing.*;
 import java.io.*;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.time.LocalDate;
 import java.util.*;
 import java.time.temporal.ChronoUnit;
@@ -15,7 +18,7 @@ import java.time.temporal.ChronoUnit;
 public class CustomerManagement {
 
     final String customerPath = "customers.txt";
-
+    Path outFilePath = Paths.get("ActivityLog3.txt");
 
     public List<String> createDataArray(String customerPath) {
         List<String> customerDataList = new ArrayList<>();
@@ -73,21 +76,29 @@ public class CustomerManagement {
         }
         return customerList;
     }
+    */
+
+    /*
+
 
 
     */
+
+
 
 
     public static Boolean test = false;
     private Scanner scanner;
 
     public String readInputData (String optionalTestParameter) {
+
         if (test) {
             scanner = new Scanner(optionalTestParameter);
         }
         else{
-            scanner = new Scanner(System.in);
+             scanner = new Scanner(System.in);
         }
+
 
         while (true) {
             try {
@@ -144,22 +155,15 @@ public class CustomerManagement {
 
 
 
-
-
-
-
-
-
     public void writeToFile(Customer customer){
+            StringBuilder sb = new StringBuilder();
 
-            try (PrintWriter w = new PrintWriter(new FileWriter("TallPeopleInformation.txt", true));) {
+//        try (PrintWriter w = new PrintWriter(Files.newBufferedWriter(outFilePath));){
+            try (PrintWriter w = new PrintWriter(new FileWriter("ActivityLog3.txt",
+                    true));) {
+                w.println(sb.append(customer.getName()).append(", ").append(customer.getIdNumber())
+                        .append(", ").append(LocalDate.now()));
 
-                for (int i = 0; i < customerList.size(); i++) {
-                    if (customerList.get(i).getLängd() > 199) {
-                        w.println(customerList.get(i).getNamn());
-                        w.println(customerList.get(i).getLängd());
-                    }
-                }
             }
             catch (FileNotFoundException e) {
                 System.out.println("Filen kunde inte hittas.");
@@ -191,7 +195,7 @@ public class CustomerManagement {
        // String input = communication();
         String input = readInputData(null);
         String customerOrNotOrHasBeen = customerOrNotOrHasBeen(customerList, input);
-        System.out.println(customerOrNotOrHasBeen);
+        System.out.println(customerOrNotOrHasBeen); //ta bort
 
     }
 
