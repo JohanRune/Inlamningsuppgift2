@@ -20,11 +20,11 @@ public class CustomerManagement {
     final String customerPath = "customers.txt";
     Path outFilePath = Paths.get("ActivityLog3.txt");
 
+
     public List<String> createDataArray(String customerPath) {
         List<String> customerDataList = new ArrayList<>();
 
-        try {
-            Scanner scanner = new Scanner(new File(customerPath)); //vad gör detta?
+        try (Scanner scanner = new Scanner(new File(customerPath));){
 
             while (scanner.hasNextLine()){
                 customerDataList.add(scanner.nextLine());
@@ -33,10 +33,7 @@ public class CustomerManagement {
         catch (Exception e){
             System.out.println("Ett fel uppstod.");
         }
-
         return customerDataList;
-
-
     }
 
     public List<Customer> createCustomerList(List<String> customerData) {
@@ -50,65 +47,33 @@ public class CustomerManagement {
                 customer.setName(customerData.get(i).substring(customerData.get(i).indexOf(",")+2));
             }
             else {
-                customer.setJoinDate(customerData.get(i)); //kanske ändra "9" till mindre hårdkodad lösning.   ;
+                customer.setJoinDate(customerData.get(i));
                 customerList.add(customer);
             }
         }
         return customerList;
     }
-
-    /*
-
-    public List<Customer> createCustomerList(List<String> customerData) {
-        List<Customer> customerList = new ArrayList<>();
-        Customer customer = new Customer();
-
-        for (int i = 0; i < customerData.size(); i++) {
-            if (customerData.get(i).contains(",")) {
-                customer = new Customer();
-                customer.setIdNumber(customerData.get(i).substring(0, 10)); //kanske ändra "10" till mindre hårdkodad lösning.   ;
-                customer.setName(customerData.get(i).substring(12)); //kanske ändra "13" till mindre hårdkodad lösning.   ;
-            }
-            else {
-                customer.setJoinDate(customerData.get(i)); //kanske ändra "9" till mindre hårdkodad lösning.   ;
-                customerList.add(customer);
-            }
-        }
-        return customerList;
-    }
-    */
-
-    /*
-
-
-
-    */
-
-
 
 
     public static Boolean test = false;
-    private Scanner scanner;
+    Scanner scanner;
 
     public String readInputData (String optionalTestParameter) {
 
         if (test) {
             scanner = new Scanner(optionalTestParameter);
         }
-        else{
-             scanner = new Scanner(System.in);
-        }
 
+        else{
+            scanner = new Scanner(System.in);
+        }
 
         while (true) {
             try {
                 System.out.println("Vad heter personen eller vad är hens personnummer (10 siffror)");
                 String indata = scanner.nextLine();
-                //String indata = JOptionPane.showInputDialog("Vad heter personen eller vad är hens personnummer (10 siffror)");
-                //if (indata == null)
-                //    System.exit(0);
+
                 while (indata.isEmpty()) {
-                    //indata = JOptionPane.showInputDialog("Du skrev inget. Försök igen.");
                     System.out.println("Du skrev inget. Försök igen!");
                     indata = scanner.nextLine();
                 }
@@ -116,25 +81,23 @@ public class CustomerManagement {
             }
 
             catch (Exception e) {
-                //return JOptionPane.showInputDialog("Ett fel har uppstått. Försök igen.");
-                //JOptionPane.showMessageDialog(null, "Ett fel har uppstått. Starta om programmet."); //obs, justera.
                 System.out.println("Ett fel har uppstått.");
                 e.getStackTrace();
                 System.exit(0);
-                //scanner.nextLine();
+                scanner.nextLine();
             }
         }
     }
 
     //nu ta input och söka in kundregistret.
-    public String customerOrNotOrHasBeen(List<Customer> customerList, String s) {
-        String s2;
+    public String customerOrNotOrHasBeen(List<Customer> customerList, String person) {
+        String message;
         for (Customer c : customerList) {
-            if (c.getName().equals(s) || c.getIdNumber().equals(s)) {
-                s2 = presentOrExCustomer(c.getJoinDate());
-                if (s2.equals("Personen är kund nu"))
+            if (c.getName().equals(person) || c.getIdNumber().equals(person)) {
+                message = presentOrExCustomer(c.getJoinDate());
+                if (message.equals("Personen är kund nu"))
                     writeToFile(c);
-                return s2;
+                return message;
             }
         }
         return "Personen har aldrig varit kund";
@@ -144,26 +107,23 @@ public class CustomerManagement {
     public String presentOrExCustomer(String date) {
 
         LocalDate firstDate = LocalDate.parse(date);
-        LocalDate dateToday = LocalDate.now();
+        LocalDate secondDate = LocalDate.parse("2020-10-13");
 
-        if (ChronoUnit.DAYS.between(firstDate, dateToday) <= 365)
+        if (ChronoUnit.DAYS.between(firstDate, secondDate) <= 365)
             return "Personen är kund nu";
         else
             return "Personen har varit kund förut men är inte kund nu";
     }
 
 
-
-
     public void writeToFile(Customer customer){
             StringBuilder sb = new StringBuilder();
 
-//        try (PrintWriter w = new PrintWriter(Files.newBufferedWriter(outFilePath));){
             try (PrintWriter w = new PrintWriter(new FileWriter("ActivityLog3.txt",
-                    true));) {
+                    true));)
+            {
                 w.println(sb.append(customer.getName()).append(", ").append(customer.getIdNumber())
                         .append(", ").append(LocalDate.now()));
-
             }
             catch (FileNotFoundException e) {
                 System.out.println("Filen kunde inte hittas.");
@@ -180,25 +140,13 @@ public class CustomerManagement {
                 e.printStackTrace();
                 System.exit(0);
             }
-
         }
-
-
-
-
-
-
 
     public void mainProgram(){
         List<String> customerDataArray = createDataArray(customerPath);
         List<Customer> customerList = createCustomerList(customerDataArray);
-       // String input = communication();
-        String input = readInputData(null);
-        String customerOrNotOrHasBeen = customerOrNotOrHasBeen(customerList, input);
-        System.out.println(customerOrNotOrHasBeen); //ta bort
-
+        String person = readInputData(null);
+        String customerOrNotOrHasBeen = customerOrNotOrHasBeen(customerList, person);
+        System.out.println(customerOrNotOrHasBeen);
     }
-
-
 }
-

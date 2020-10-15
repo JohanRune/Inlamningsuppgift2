@@ -16,26 +16,19 @@ public class CustomerManagementTest {
 
 CustomerManagement cm = new CustomerManagement();
 
-    //börja med att göra test för att läsa in data från filen,
-    // sedan skapa objekt för personer och lägga personobjekten i ny lista.
-    //därefter skriva program som kollar om personer har betalat eller inte.
-        //en metod som får in "promt", dvs ett meddelande till kunden. readInputData. två sorter. id-nummer eller namn: kommer senare ev.
-        //metod som skickar promt till dataskärmen. med fält för svar. läser in svar.
-        //kolla input data mot kundregister. Här kolla antal dagar sedan betalade, och här kolla metoden jag hittade?
-
-
-
     //detta testar om data läses in ok och läggs ok i en arrayList.
     @Test
-    public final void createDataArrayTest(){
+    public final void testCreateDataArray(){
         List<String> customerData = cm.createDataArray("customers.txt");
         assertTrue(customerData.size()== 28);
         assertTrue(customerData.get(0).startsWith("7603021234"));
         assertTrue(customerData.get(1).startsWith("2019-07-01"));
+        assertTrue(customerData.get(2).endsWith("Belle"));
+
     }
 
     @Test
-    public final void createCustomerArrayTest(){
+    public final void testCreateCustomerArray(){
         List<String> customerData = cm.createDataArray("customers.txt");
         List<Customer> customerList = cm.createCustomerList(customerData);
         assertTrue(customerList.get(0).getIdNumber().equals("7603021234"));
@@ -54,7 +47,7 @@ CustomerManagement cm = new CustomerManagement();
     }
 
     @Test
-    public final void readInputDataTest(){
+    public final void testReadInputData(){
         cm.test=true;
         String ok = "23";
         assertTrue(cm.readInputData(ok).equals("23"));
@@ -62,7 +55,7 @@ CustomerManagement cm = new CustomerManagement();
 
 
     @Test
-    public final void customerOrNotOrHasBeenTest(){
+    public final void testCustomerOrNotOrHasBeen(){
         List<String> customerData = cm.createDataArray("customers.txt");
         List<Customer> customerList = cm.createCustomerList(customerData);
         assertTrue(cm.customerOrNotOrHasBeen(customerList, "Alhambra Aromes").equals("Personen har varit kund förut men är inte kund nu"));
@@ -77,7 +70,7 @@ CustomerManagement cm = new CustomerManagement();
     }
 
     @Test
-    public final void nowOrExCustomerTest(){
+    public final void testNowOrExCustomer(){
         String date1 = "2015-08-03";
         String date2 = "2020-03-15";
         String date3 = "2020-01-30";
@@ -85,10 +78,4 @@ CustomerManagement cm = new CustomerManagement();
         assertTrue(cm.presentOrExCustomer(date2).equals("Personen är kund nu"));
         assertTrue(cm.presentOrExCustomer(date3).equals("Personen är kund nu"));
     }
-
-    //nu behövs dialogrutor. Den frågar efter namn eller nummer och väntar på svar. Den ger tillbaka info om kunden.
-
-
-
-
 }
