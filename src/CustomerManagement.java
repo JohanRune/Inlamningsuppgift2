@@ -43,8 +43,10 @@ public class CustomerManagement {
         for (int i = 0; i < customerData.size(); i++) {
             if (customerData.get(i).contains(",")) {
                 customer = new Customer();
-                customer.setIdNumber(customerData.get(i).substring(0, customerData.get(i).indexOf(",")));
-                customer.setName(customerData.get(i).substring(customerData.get(i).indexOf(",")+2));
+                customer.setIdNumber(customerData.get(i).substring(0, customerData.
+                        get(i).indexOf(",")));
+                customer.setName(customerData.get(i).substring(customerData.get(i).
+                        indexOf(",")+2));
             }
             else {
                 customer.setJoinDate(customerData.get(i));
@@ -59,11 +61,9 @@ public class CustomerManagement {
     Scanner scanner;
 
     public String readInputData (String optionalTestParameter) {
-
         if (test) {
             scanner = new Scanner(optionalTestParameter);
         }
-
         else{
             scanner = new Scanner(System.in);
         }
@@ -71,11 +71,11 @@ public class CustomerManagement {
         while (true) {
             try {
                 System.out.println("Vad heter personen eller vad är hens personnummer (10 siffror)");
-                String indata = scanner.nextLine();
+                String indata = scanner.nextLine().trim();
 
                 while (indata.isEmpty()) {
                     System.out.println("Du skrev inget. Försök igen!");
-                    indata = scanner.nextLine();
+                    indata = scanner.nextLine().trim();
                 }
                 return indata;
             }
@@ -93,7 +93,7 @@ public class CustomerManagement {
     public String customerOrNotOrHasBeen(List<Customer> customerList, String person) {
         String message;
         for (Customer c : customerList) {
-            if (c.getName().equals(person) || c.getIdNumber().equals(person)) {
+            if (c.getName().equalsIgnoreCase(person) || c.getIdNumber().equals(person)) {
                 message = presentOrExCustomer(c.getJoinDate());
                 if (message.equals("Personen är kund nu"))
                     writeToFile(c);
