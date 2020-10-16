@@ -19,7 +19,7 @@ public class CustomerManagement {
 
     final String customerPath = "customers.txt";
     Path outFilePath = Paths.get("ActivityLog3.txt");
-    String lineIn;
+    String in;
 
 
     public List<String> createDataArray(String customerPath) {
@@ -27,8 +27,8 @@ public class CustomerManagement {
         List<String> customerDataList = new ArrayList<>();
         try (BufferedReader reader = new BufferedReader(
                 new FileReader(customerPath));){
-            while ((lineIn = reader.readLine()) != null) {
-                customerDataList.add(lineIn);
+            while ((in = reader.readLine()) != null) {
+                customerDataList.add(in);
             }
         }
         catch (FileNotFoundException e) {
@@ -70,6 +70,7 @@ public class CustomerManagement {
         }
         return customerList;
     }
+
 
 
     public static Boolean test = false;

@@ -39,11 +39,6 @@ CustomerManagement cm = new CustomerManagement();
         assertTrue(customerList.get(4).getName().equals("Elmer Ekorrsson"));
         assertTrue(customerList.get(4).getJoinDate().equals("2010-04-07"));
         assertTrue(customerList.get(13).getIdNumber().equals("7805211234"));
-        assertTrue(customerList.get(13).getName().equals("Nahema Ninsson"));
-        assertTrue(customerList.get(13).getJoinDate().equals("2020-08-04"));
-        assertTrue(customerList.get(3).getName().equals("Diamanda Djedi"));
-        assertTrue(customerList.get(3).getJoinDate().equals("2020-01-30"));
-
     }
 
     @Test
@@ -51,6 +46,7 @@ CustomerManagement cm = new CustomerManagement();
         cm.test=true;
         String ok = "23";
         assertTrue(cm.readInputData(ok).equals("23"));
+        assertFalse(cm.readInputData(ok).equals("24"));
     }
 
 
