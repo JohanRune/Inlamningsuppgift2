@@ -19,21 +19,36 @@ public class CustomerManagement {
 
     final String customerPath = "customers.txt";
     Path outFilePath = Paths.get("ActivityLog3.txt");
+    String lineIn;
 
 
     public List<String> createDataArray(String customerPath) {
+
         List<String> customerDataList = new ArrayList<>();
-
-        try (Scanner scanner = new Scanner(new File(customerPath));){
-
-            while (scanner.hasNextLine()){
-                customerDataList.add(scanner.nextLine());
+        try (BufferedReader reader = new BufferedReader(
+                new FileReader(customerPath));){
+            while ((lineIn = reader.readLine()) != null) {
+                customerDataList.add(lineIn);
             }
         }
-        catch (Exception e){
-            System.out.println("Ett fel uppstod.");
+        catch (FileNotFoundException e) {
+            System.out.println("Filen kunde inte hittas.");
+            e.printStackTrace();
+            System.exit(0);
         }
+        catch (IOException e) {
+            System.out.println("Det gick inte att skriva till fil.");
+            e.printStackTrace();
+            System.exit(0);
+        }
+        catch (Exception e) {
+            System.out.println("Något gick fel.");
+            e.printStackTrace();
+            System.exit(0);
+        }
+
         return customerDataList;
+
     }
 
     public List<Customer> createCustomerList(List<String> customerData) {
